@@ -3,8 +3,50 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список дел</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Список дел</h1>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        <form asp-controller="Tasks" asp-action="Create" method="post">
+            <div class="input-group mb-3">
+                <input type="text" name="Title" class="form-control" placeholder="Введите новую задачу" required />
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Добавить</button>
+                </div>
+            </div>
+        </form>
+
+        <h2>Текущие задачи:</h2>
+        <ul class="list-group">
+            @foreach (var task in Model)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @task.Title
+                    <div>
+                        <form asp-controller="Tasks" asp-action="MarkAsCompleted" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@task.Id" />
+                            <button class="btn btn-success btn-sm" type="submit" @(task.IsCompleted ? "disabled" : "")>✅ Завершить</button>
+                        </form>
+                        <form asp-controller="Tasks" asp-action="Delete" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@task.Id" />
+                            <button class="btn btn-danger btn-sm" type="submit">🗑 Удалить</button>
+                        </form>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
